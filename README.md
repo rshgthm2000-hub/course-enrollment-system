@@ -16,7 +16,7 @@ Design and implement a Course Enrollment Management System that supports:
 * **Prerequisite Validation:** Ensuring students have completed foundational courses before advanced registration.
 * **Conflict Prevention:** Identifying and blocking duplicate enrollments or overlapping timetable slot clashes.
 * **Automated Queue Management:** Maintaining a waitlist once a course reaches peak capacity.
-* **Dynamic Seat Allocation:** Automatically promoting the next student in line when an active seat is vacated.
+* **Dynamic Seat Allocation:** Automatically promoting the next eligible student in line when an active seat is vacated.
 
 ---
 
@@ -31,11 +31,10 @@ Design and implement a Course Enrollment Management System that supports:
 * Add new courses with detailed credit weights to the active academic catalog.
 * Establish complex prerequisite dependencies for progressive course progression.
 * Assign distinct timetable slots and enforce max seat capacity constraints.
-
-### 🛡️ Enrollment & Validation System
+* ### 🛡️ Enrollment & Validation System
 * **Prerequisite Checking:** Scans completed student history before authorizing registration.
 * **Slot Clash Detection:** Cross-checks new course requests against a student's active schedule matrix.
-* **Capacity Tracking:** Routes overflowing sign-ups directly to a FIFO waitlist structure.
+* **Capacity Tracking:** Routes overflowing sign-ups directly to a FIFO waitlist structure if all other conditions are met.
 
 ### 🔄 Course Withdrawal
 * Drop currently active courses cleanly.
@@ -59,19 +58,20 @@ The application utilizes optimized STL containers to map relationships and manag
 | Structure | Data Model Mapping | Technical Purpose |
 | :--- | :--- | :--- |
 | `std::map` | `ID ➔ Object` | Provides fast search, retrieval, and modification matrices for student and course indices. |
-| `std::set` | `Course_IDs` | Handles mathematical membership testing for prerequisites, completed records, and active courses. |
+| `std::set` | `Course_IDs` / `Slots` | Handles mathematical membership testing for prerequisites, completed records, active courses, and slot conflicts. |
 | `std::queue` | `Waiting_Students` | Implements a fair FIFO (First-In, First-Out) pipeline to handle course registration overflows. |
-| `std::map<int, string>` | `Order_Index ➔ Student` | Manages stable enrollment ordering and chronological registration queues. |
-
+| `std::map<int, string>` | `Order_Index ➔ Student` | Manages stable enrollment ordering and chronological registration queues inside a course. |
 ---
 
 ## 🎮 Supported Operations
 
-* `Add Student` — Inserts a new student record along with their academic transcripts.
-* `Add Course` — Defines capacity, scheduled hours, and dependency rules for a subject.
-* `Enroll Student` — Drives the automated check engine to safely allocate an open slot.
-* `Drop Course` — Relinquishes a course seat and triggers background waitlist processing.
-* `Print Enrolled Students` — Generates complete structural rosters grouped by course or queue status.
+The system processes the following space-separated console commands:
+
+* `add_student [id] [name] [year] [completed_count] [course1...]`
+* `add_course [code] [name] [credits] [capacity] [slot] [prereq_count] [prereq1...]`
+* `enroll [student_id] [course_code]`
+* `drop [student_id] [course_code]`
+* `print [course_code]`
 
 ---
 
@@ -85,15 +85,14 @@ This project demonstrates proficiency in:
 
 ---
 
-## 📝 Note
+## Note
 
 This implementation is based on a structured lab specification provided by senior students as part of the Object-Oriented Programming laboratory practice at IIT Madras. The codebase represents an independent, optimized implementation of the specified behavioral requirements.
 
 ---
 
-## 🧑‍💻 Author
+## Author
 
-**RISHI GOUTHAM** C++ | Advanced Algorithms | Computer Science Student
-
-*Developed as part of OOP practice and coursework preparation.*
-```
+**RISHI GOUTHAM**
+*C++ | Systems Programming | Computer Science Student*
+Developed as part of OOP practice and coursework preparation.
